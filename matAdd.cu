@@ -39,7 +39,8 @@ int main() {
 	cudaMemcpy(d_A, A, N * M * sizeof(float), cudaMemcpyHostToDevice);
 	cudaMemcpy(d_B, B, N * M * sizeof(float), cudaMemcpyHostToDevice);
 	cudaMemcpy(d_C, C, N * M * sizeof(float), cudaMemcpyHostToDevice);
-	
+
+	// launch kernel instance
 	dim3 blockDim(16, 16);
 	dim3 gridDim((M + blockDim.x - 1)/blockDim.x, (N + blockDim.y - 1)/blockDim.y);
 	matAdd<<<gridDim, blockDim>>>(d_A, d_B, d_C, N, M);
