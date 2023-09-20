@@ -5,7 +5,8 @@
 __global__ void matAdd(float *d_A, float *d_B, float *d_C, int N, int M) {
 	int row = blockIdx.y * blockDim.y + threadIdx.y;
 	int col = blockIdx.x * blockDim.x + threadIdx.x;
-	
+
+	// add matrix elements
 	if(row < N && col < M) {
 		d_C[row * M + col] = d_A[row * M + col] + d_B[row * M + col];
 	}
@@ -39,7 +40,6 @@ int main() {
 	cudaMemcpy(d_B, B, N * M * sizeof(float), cudaMemcpyHostToDevice);
 	cudaMemcpy(d_C, C, N * M * sizeof(float), cudaMemcpyHostToDevice);
 	
-	// kernel launch: vector addition
 	dim3 blockDim(16, 16);
 	dim3 gridDim((M + blockDim.x - 1)/blockDim.x, (N + blockDim.y - 1)/blockDim.y);
 	addVectors<<<gridDim, blockDim>>>(d_A, d_B, d_C, N, M);
