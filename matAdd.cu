@@ -12,7 +12,7 @@ __global__ void matAdd(float *d_A, float *d_B, float *d_C, int N, int M) {
 }
 
 int main() {
-  // var declaration
+  	// var declaration
 	int N = 5;
 	int M = 5;
 	float *A, *B, *C;
@@ -49,7 +49,7 @@ int main() {
 	cudaMemcpy(B, d_B, N * M * sizeof(float), cudaMemcpyDeviceToHost);
 	cudaMemcpy(C, d_C, N * M * sizeof(float), cudaMemcpyDeviceToHost);
 
-  // display results
+  	// display results
 	for(int i = 0; i < N * M; ++i) {
 		printf("A: %f B: %f C: %f ", A[i], B[i], C[i]);
 		printf("\n");
