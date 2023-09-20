@@ -6,8 +6,8 @@ __global__ void dotProd(float *d_a, float *d_b, float *d_c, float *prodVec, int 
 	int col = blockIdx.x * blockDim.x + threadIdx.x;
 	
 	// element-wise products
-	if (tid < N) {
-		prodVec[tid] = d_a[tid] * d_b[tid];
+	if (col < N) {
+		prodVec[tid] = d_a[col] * d_b[col];
 	}
 	
 	// determine amount of padding for parallel reduction
@@ -24,8 +24,8 @@ __global__ void dotProd(float *d_a, float *d_b, float *d_c, float *prodVec, int 
 
 	// sum using parallel reduction
 	for (int stride = 1 << padding; stride >= 1; stride /= 2) {
-		if (tid < stride) {
-			prodVec[tid] += prodVec[tid + stride];
+		if (col < stride) {
+			prodVec[col] += prodVec[col + stride];
 		}
 	}	
 	
