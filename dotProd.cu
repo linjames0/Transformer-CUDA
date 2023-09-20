@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 // dot prod kernel
-__global__ void dotProd(float *d_a, float *d_b, float *d_c, float *prodVec, int N) {
+__global__ void dotProd(float *d_a, float *d_b, float *d_dotprod, float *prodVec, int N) {
 	int col = blockIdx.x * blockDim.x + threadIdx.x;
 	
 	// element-wise products
@@ -31,26 +31,26 @@ __global__ void dotProd(float *d_a, float *d_b, float *d_c, float *prodVec, int 
 	
 	__syncthreads();
 
-	// set d_c equal to the sum
-	d_c[0] = prodVec[0];
+	// set dotprod
+	d_dotprod[0] = prodVec[0];
 }
 
 
 int main() {
 	// var declaration
 	int N = 5;
-	float *h_a, *h_b, *h_c;
-	float *d_a, *d_b, *d_c;
+	float *h_a, *h_b, *h_dotprod;
+	float *d_a, *d_b, *d_dotprod;
 	float *prodVec;
 
 	// memory allocation
 	h_a = (float *)malloc(N * sizeof(float));
 	h_b = (float *)malloc(N * sizeof(float));
-	h_c = (float *)malloc(1 * sizeof(float));
+	h_dotprod = (float *)malloc(1 * sizeof(float));
 
 	cudaMalloc((void**)&d_a, N * sizeof(float));
 	cudaMalloc((void**)&d_b, N * sizeof(float));
-	cudaMalloc((void**)&d_c, 1 * sizeof(float));
+	cudaMalloc((void**)&d_dotprod, 1 * sizeof(float));
 	cudaMalloc((void**)&prodVec, 2 * N * sizeof(float));
 
 	// populate vectors with data	
@@ -63,10 +63,10 @@ int main() {
 	cudaMemcpy(d_b, h_b, N * sizeof(float), cudaMemcpyHostToDevice);
 	
 	// launch kernel instance
-	dotProd<<<1, N>>>(d_a, d_b, d_c, prodVec, N);
+	dotProd<<<1, N>>>(d_a, d_b, d_dotprod, prodVec, N);
 	
 	// copy results to CPU
-	cudaMemcpy(h_c, d_c, 1 * sizeof(float), cudaMemcpyDeviceToHost);
+	cudaMemcpy(h_dotprod, d_dotprod, 1 * sizeof(float), cudaMemcpyDeviceToHost);
 
 	// print results
 	printf("A:\n--------\n");
@@ -83,7 +83,7 @@ int main() {
         }
         
         printf("--------\n");
-        printf("C:\n");
+        printf("Dot Product:\n");
         printf("%f ", h_c[0]);
         printf("\n--------\n");
 
