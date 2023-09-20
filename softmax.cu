@@ -8,39 +8,39 @@ __global__ void softmax(float *d_in, float *d_out, float *expArr, float *redArr,
   
   	if(col < N) {
         // calculate e^(x) for each element
-    		float local_exp = expf(d_in[col]);
-    		expArr[col] = local_exp;
-    		redArr[col] = expArr[col];
+		float local_exp = expf(d_in[col]);
+		expArr[col] = local_exp;
+		redArr[col] = expArr[col];
     		
         // amount of padding for parallel reduction
         int padding = 0;
         for (int e = 0; (float)N/(float)(1 << e)>= 1; ++e) {
-              padding = e + 1;
+            padding = e + 1;
         }
 
         // pad each array with zeroes, until the len is a power of 2
         for (int i = 0; i < (1 << padding) - N; ++i) {
-              expArr[N + i] = 0;
-              redArr[N + i] = 0;
+            expArr[N + i] = 0;
+            redArr[N + i] = 0;
         }
       
-		    __syncthreads();	
-		
-    		// parallel reduction to compute sum
-    		for(int stride = 1 << padding; stride >= 1; stride /= 2) {
-    			  if(col < stride) {
-    				    redArr[col] += redArr[col + stride];
-            }
-    		}
+		__syncthreads();	
+	
+		// parallel reduction to compute sum
+		for(int stride = 1 << padding; stride >= 1; stride /= 2) {
+			if(col < stride) {
+				redArr[col] += redArr[col + stride];
+			}
+		}
     }
 
     // calculate e^(x) / sum(e^(x)) = softmax
   	if(col == 0) {
-    		float sum = redArr[0];
-    		for(int i = 0; i < N; ++i) {
-  			    d_out[i] = expArr[i] / sum;
-		    }
-	  }
+    	float sum = redArr[0];
+    	for(int i = 0; i < N; ++i) {
+  			d_out[i] = expArr[i] / sum;
+		}
+	}
 }
 
 int main() {
@@ -60,7 +60,7 @@ int main() {
 
     // data initialization
   	for(int i = 0; i < N; ++i) {
-    		h_in[i] = (float)(rand() % 5 + 1);
+    	h_in[i] = (float)(rand() % 5 + 1);
   	}
 	
   	cudaMemcpy(d_in, h_in, N * sizeof(float), cudaMemcpyHostToDevice);
