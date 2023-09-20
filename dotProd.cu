@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// dot prod kernel
 __global__ void dotProd(float *d_a, float *d_b, float *d_c, float *prodVec, int N) {
-    int col = blockIdx.x * blockDim.x + threadIdx.x;
+	int col = blockIdx.x * blockDim.x + threadIdx.x;
 	
 	// element-wise products
 	if (tid < N) {
@@ -30,18 +31,19 @@ __global__ void dotProd(float *d_a, float *d_b, float *d_c, float *prodVec, int 
 	
 	__syncthreads();
 
+	// set d_c equal to the sum
 	d_c[0] = prodVec[0];
 }
 
 
 int main() {
-	// var declaration and memory allocation
+	// var declaration
 	int N = 5;
 	float *h_a, *h_b, *h_c;
 	float *d_a, *d_b, *d_c;
 	float *prodVec;
 
-    // memory allocation
+	// memory allocation
 	h_a = (float *)malloc(N * sizeof(float));
 	h_b = (float *)malloc(N * sizeof(float));
 	h_c = (float *)malloc(1 * sizeof(float));
@@ -66,7 +68,7 @@ int main() {
 	// copy results to CPU
 	cudaMemcpy(h_c, d_c, 1 * sizeof(float), cudaMemcpyDeviceToHost);
 
-    // print results
+	// print results
 	printf("A:\n--------\n");
         for(int i = 0; i < N; ++i) {
                 printf("%f ", h_a[i]);
