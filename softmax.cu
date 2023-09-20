@@ -34,7 +34,7 @@ __global__ void softmax(float *d_in, float *d_out, float *expArr, float *redArr,
 		}
 	}
 
-    // calculate e^(x) / sum(e^(x)) = softmax
+	// calculate e^(x) / sum(e^(x)) = softmax
 	if(col == 0) {
 		float sum = redArr[0];
 		for(int i = 0; i < N; ++i) {
