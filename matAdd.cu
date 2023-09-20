@@ -59,6 +59,7 @@ int main() {
 		printf("\n)
 	}
 
+	printf("----------\n");
 	printf("Matrix B: \n");
 	printf("----------\n");
 	for (int i = 0; i < N; ++i) {
@@ -68,6 +69,7 @@ int main() {
 		printf("\n)
 	}
 
+	printf("----------\n");
 	printf("Matrix C: \n");
 	printf("----------\n");
 	for (int i = 0; i < N; ++i) {
