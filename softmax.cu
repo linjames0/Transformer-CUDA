@@ -24,12 +24,12 @@ __global__ void softmax(float *d_in, float *d_out, float *expArr, float *redArr,
             redArr[N + i] = 0;
         }
       
-		__syncthreads();	
+	__syncthreads();	
 	
-		// parallel reduction to compute sum
-		for(int stride = 1 << padding; stride >= 1; stride /= 2) {
-			if(col < stride) {
-				redArr[col] += redArr[col + stride];
+	// parallel reduction to compute sum
+	for(int stride = 1 << padding; stride >= 1; stride /= 2) {
+		if(col < stride) {
+			redArr[col] += redArr[col + stride];
 			}
 		}
 	}
