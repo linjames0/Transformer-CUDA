@@ -44,15 +44,15 @@ int main() {
 	matScale<<<gridDim, blockDim>>>(d_A, d_B, scale, M, N);
 	
 	// copy result back to host
-	cudaMemcpy(A, d_A, M * N * sizeof(float), cudaMemcpyDeviceToHost);
-	cudaMemcpy(B, d_B, M * N * sizeof(float), cudaMemcpyDeviceToHost);
+	cudaMemcpy(h_A, d_A, M * N * sizeof(float), cudaMemcpyDeviceToHost);
+	cudaMemcpy(h_B, d_B, M * N * sizeof(float), cudaMemcpyDeviceToHost);
 
   	// display results
 	printf("Matrix A: \n");
 	printf("----------\n");
-	for (int i = 0; i < N; ++i) {
-		for (int j = 0; j < M; ++j) {
-			printf("A: %f ", A[i * M + j]);
+	for (int i = 0; i < M; ++i) {
+		for (int j = 0; j < N; ++j) {
+			printf("A: %f ", h_A[i * N + j]);
 		}
 		printf("\n");
 	}
@@ -60,15 +60,15 @@ int main() {
 	printf("----------\n");
 	printf("Matrix B: \n");
 	printf("----------\n");
-	for (int i = 0; i < N; ++i) {
-		for (int j = 0; j < M; ++j) {
-			printf("B: %f ", B[i * M + j]);
+	for (int i = 0; i < M; ++i) {
+		for (int j = 0; j < N; ++j) {
+			printf("B: %f ", h_B[i * N + j]);
 		}
 		printf("\n");
 	}
 	
 	// clean up data
-	free(A); free(B);
+	free(h_A); free(h_B);
 	cudaFree(d_A); cudaFree(d_B);
 
 	return 0;
