@@ -90,11 +90,12 @@ int main() {
 	// clean up memory
 	cudaFree(d_a);
 	cudaFree(d_b);
-	cudaFree(d_c);
+	cudaFree(d_dotprod);
+	cudaFree(prodVec);
 
 	free(h_a);
 	free(h_b);
-	free(h_c);
+	free(h_dotprod);
 
 	return 0;
 }
