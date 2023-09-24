@@ -2,10 +2,10 @@
 #include <stdlib.h>
 
 __global__ void addVectors(float *d_a, float *d_b, float *d_c, int N) {
-        int i = threadIdx.x;
+        int col = blockIdx.x * blockDim.x + threadIdx.x;
 
-        if(i < N) {
-                d_c[i] = d_a[i] + d_b[i];
+        if(col < N) {
+                d_c[col] = d_a[col] + d_b[col];
         }
 }
 
