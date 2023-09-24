@@ -33,8 +33,6 @@ __global__ void mean(float *d_a, float *d_mean, float *redArr1, int N) {
 	__syncthreads();
 
 	d_mean[0] = redArr1[0] / N;
-	
-
 }
 
 __global__ void var(float *d_a, float *d_var, float *d_mean, float *redArr1, float *redArr2, int N) {
