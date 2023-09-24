@@ -13,9 +13,7 @@ __global__ void bmm(float *d_A, float *d_B, float *d_C, int batch_size, int M, i
                 for (int i = 0; i < N; ++i) {
                         sum += d_A[batch * M * N + row * N + i] * d_B[batch * N * P + i * P + col];
                 }
-                printf("%f\n", sum);
 		d_C[batch * M * P + row * P + col] = sum;
-        	printf("%f\n", d_C[batch * M * P + row * P + col]); 
 	}
 }
 
